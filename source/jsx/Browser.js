@@ -9,7 +9,7 @@ const Browser = React.createClass({
 
     componentDidMount() {
         Net
-        .get('http://localhost:8000/articles/')
+        .get('https://api.dhariri.com/articles/')
         .then((response) => {
             this.setState({
                 articles : response.json
@@ -38,7 +38,7 @@ const Browser = React.createClass({
 
     handleNewClick() {
         Net
-        .post('http://localhost:8000/articles/')
+        .post('https://api.dhariri.com/articles/')
         .then((response) => {
             const articles = this.state.articles;
             articles.unshift(response.json);
@@ -64,13 +64,13 @@ const Browser = React.createClass({
     },
 
     handleSaveClick() {
-        Net.put(`http://localhost:8000/articles/${this.state.article.id}`, this.state.article);
+        Net.put(`https://api.dhariri.com/articles/${this.state.article.id}`, this.state.article);
     },
 
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             Net
-            .delete(`http://localhost:8000/articles/${this.state.article.id}`)
+            .delete(`https://api.dhariri.com/articles/${this.state.article.id}`)
             .then((response) => {
                 // Remove the article from the articles body to reflect the change
                 let index = -1;
