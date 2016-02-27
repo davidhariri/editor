@@ -1,0 +1,65 @@
+.browser {
+    &__menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 50px;
+        z-index: 3;
+
+        * {
+            -webkit-user-select: none;
+        }
+    }
+
+    &__list {
+        width: 280px;
+        height: 100vh;
+        overflow: scroll;
+        position: relative;
+        z-index: 2;
+        border-right: 1px solid $light-grey;
+
+        * {
+            -webkit-user-select: none;
+        }
+
+        &__item {
+            min-height: 72px;
+            background-color: transparent;
+            border-bottom: 1px solid $light-grey;
+            cursor: pointer;
+            padding: 12px;
+            line-height: 22px;
+            position: relative;
+
+            &--selected {
+                background-color: $light-grey;
+            }
+
+            &__title {
+                font-size: 17px;
+                color: $black;
+            }
+
+            &__subtitle {
+                color: $dark-grey;
+                font-size: 14px;
+            }
+
+            &__status {
+                position: absolute;
+                right: 12px;
+                top: 12px;
+                background-color: #ffcc33;
+                width: 12px;
+                height: 12px;
+                border-radius: 100%;
+
+                &--published {
+                    background-color: #4bda7b;
+                }
+            }
+        }
+    }
+}

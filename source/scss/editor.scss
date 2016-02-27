@@ -1,0 +1,39 @@
+.editor {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    text-align: center;
+    padding-left: 320px;
+    padding-right: 40px;
+    overflow: scroll;
+    padding-top: 90px;
+    padding-bottom: 90px;
+    font-size: 19px;
+
+    input, textarea {
+        max-width: 768px;
+        width: 100%;
+        display: inline-block;
+        margin: 0 auto;
+        resize: none;
+    }
+
+    .editor__title {
+        font-weight: 400;
+        font-size: 2em;
+    }
+
+    .editor__tags {
+        font-size: 17px;
+    }
+
+    .editor__content {
+        font-size: 1.1em;
+        line-height: 1.5em;
+        resize: none;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,25 @@
+.button {
+    display: inline-block;
+    width: auto;
+    background-color: $white;
+    border: 1px solid $light-grey;
+    color: $dark-grey;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-right: 12px;
+
+    &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    &:hover {
+        color: $black;
+    }
+
+    &:active {
+        background-color: $light-grey;
+    }
+}
