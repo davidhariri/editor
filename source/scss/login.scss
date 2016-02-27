@@ -1,0 +1,29 @@
+.login {
+    margin: 0 auto;
+    width: 280px;
+    overflow: hidden;
+    text-align: center;
+
+    &__input-container {
+        text-align: left;
+        border: 1px solid $light-grey;
+        border-radius: 3px;
+        margin-bottom: 12px;
+
+        &__input {
+            width: 100%;
+            padding: 9px;
+            border-bottom: 1px solid $light-grey;
+            margin: 0 auto;
+            font-size: 17px;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    &__button {
+        margin: 0 auto;
+    }
+}
