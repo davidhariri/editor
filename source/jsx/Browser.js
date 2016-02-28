@@ -75,7 +75,7 @@ const Browser = React.createClass({
             this.setState({
                 article
             }, () => {
-                this.handleSaveClick();
+                this.handleSave();
             });
         }
     },
@@ -112,7 +112,7 @@ const Browser = React.createClass({
         const article = this.state.article;
         article.published = !article.published;
         this.setState({ article }, () => {
-            this.handleSaveClick();
+            this.handleSave();
         })
     },
 
