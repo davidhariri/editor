@@ -1,8 +1,8 @@
 let user = sessionStorage.getItem("user");
 let password = sessionStorage.getItem("password");
+const APIURL = 'https://api.dhariri.com';
 
 if(user && password) {
-    // Try to authenticate and callback to rendering the browser
     authenticate();
 } else {
     renderLogin();
@@ -23,7 +23,7 @@ function authenticate(callback) {
         }
     });
 
-    Net.get('https://api.dhariri.com/')
+    Net.get(APIURL)
     .then((response) => {
         if(response.status.code === 200) {
             ReactDOM.render(<Browser/>, document.getElementById("app"));

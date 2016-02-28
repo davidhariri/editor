@@ -11,7 +11,8 @@
     overflow: scroll;
     padding-top: 90px;
     padding-bottom: 90px;
-    font-size: 19px;
+    font-size: 20px;
+    font-family: "Menlo", "Monaco", monospace;
 
     input, textarea {
         max-width: 768px;
@@ -19,19 +20,13 @@
         display: inline-block;
         margin: 0 auto;
         resize: none;
+        background-color: transparent;
+        font-family: inherit;
+        font-size: inherit;
     }
 
-    .editor__title {
-        font-weight: 400;
-        font-size: 2em;
-    }
-
-    .editor__tags {
-        font-size: 17px;
-    }
-
-    .editor__content {
-        font-size: 1.1em;
+    .editor__content, .editor__title {
+        font-size: 1em;
         line-height: 1.5em;
         resize: none;
         overflow: hidden;

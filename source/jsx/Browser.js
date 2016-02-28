@@ -9,7 +9,7 @@ const Browser = React.createClass({
 
     componentDidMount() {
         Net
-        .get('https://api.dhariri.com/articles/')
+        .get(`${APIURL}/articles/`)
         .then((response) => {
             this.setState({
                 articles : response.json
@@ -17,17 +17,6 @@ const Browser = React.createClass({
                 this.handleArticleSelect(this.state.articles[0]);
             })
         })
-
-        // TODO: Global hot-key bindings
-        // window.onkeydown = (event) => {
-        //     switch (event.keyCode) {
-        //         case 40:
-        //             // Down key
-        //             break;
-        //         default:
-        //
-        //     }
-        // }
     },
 
     handleArticleSelect(article) {
@@ -38,7 +27,7 @@ const Browser = React.createClass({
 
     handleNewClick() {
         Net
-        .post('https://api.dhariri.com/articles/')
+        .post(`${APIURL}/articles/`)
         .then((response) => {
             const articles = this.state.articles;
             articles.unshift(response.json);
@@ -64,13 +53,18 @@ const Browser = React.createClass({
     },
 
     handleSaveClick() {
-        Net.put(`https://api.dhariri.com/articles/${this.state.article.id}`, this.state.article);
+        Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
+        .then((response) => {
+            this.setState({
+                article : response.json
+            });
+        });
     },
 
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             Net
-            .delete(`https://api.dhariri.com/articles/${this.state.article.id}`)
+            .delete(`${APIURL}/articles/${this.state.article.id}`)
             .then((response) => {
                 // Remove the article from the articles body to reflect the change
                 let index = -1;
