@@ -36,7 +36,6 @@ const Textarea = React.createClass({
 	},
 
 	handleChange(event) {
-		// this.resize();
 		this.props.changeHandler(event.target.value);
 	},
 
@@ -64,7 +63,6 @@ const Textarea = React.createClass({
 			>
 				<textarea
 					onChange={this.handleChange}
-					onKeydown={this.handleKeyDown}
 					onPaste={this.delayedResize}
 					onCut={this.delayedResize}
 					onDrop={this.delayedResize}

@@ -7,6 +7,24 @@ const Browser = React.createClass({
         }
     },
 
+    componentWillMount() {
+        // Set the debounce save method
+        this.debouncedHandleSave = debounce(() => {
+            this.handleSave();
+        }, 500, false);
+    },
+
+    handleSave() {
+        Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
+        .then((response) => {
+            this.setState({
+                article : response.json
+            }, () => {
+                // TODO: Update the state of the application
+            });
+        });
+    },
+
     componentDidMount() {
         Net
         .get(`${APIURL}/articles/`)
@@ -52,15 +70,6 @@ const Browser = React.createClass({
         }
     },
 
-    handleSaveClick() {
-        Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
-        .then((response) => {
-            this.setState({
-                article : response.json
-            });
-        });
-    },
-
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             Net
@@ -104,7 +113,8 @@ const Browser = React.createClass({
     },
 
     handleArticleChange(article) {
-        this.setState({ article : article });
+        this.setState({ article });
+        this.debouncedHandleSave();
     },
 
     render() {
@@ -128,7 +138,6 @@ const Browser = React.createClass({
             <div className="browser">
                 <div className="menu browser__menu">
                     <div className="button" onClick={this.handleNewClick}>New</div>
-                    <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleSaveClick}>Save</div>
                     <div className={`button ${this.state.article && this.state.article.published ? 'button--disabled' : ''}`} onClick={this.handleEditKeyClick}>{keyLabel}</div>
                     <div className={`button ${this.state.article && this.state.article.key.length > 0 ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
