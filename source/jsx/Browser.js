@@ -19,8 +19,11 @@ const Browser = React.createClass({
         Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
         .then((response) => {
             if(response.status.code === 200) {
+                const article = this.state.article;
+                article.content.html = response.json.content.html;
+
                 this.setState({
-                    article : response.json,
+                    article,
                     status : "Saved"
                 });
             } else {
