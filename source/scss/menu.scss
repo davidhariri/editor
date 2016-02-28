@@ -3,4 +3,13 @@
     width: 100%;
     border-bottom: 1px solid $light-grey;
     background-color: $white;
+
+    &__status {
+        width: auto;
+        display: inline-block;
+        color: $grey;
+        position: absolute;
+        right: 12px;
+        top: 16px;
+    }
 }

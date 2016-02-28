@@ -3,7 +3,8 @@ const Browser = React.createClass({
         return {
             articles : [],
             article : null,
-            editing : true
+            editing : true,
+            status : ""
         }
     },
 
@@ -17,11 +18,17 @@ const Browser = React.createClass({
     handleSave() {
         Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
         .then((response) => {
-            this.setState({
-                article : response.json
-            }, () => {
-                // TODO: Update the state of the application
-            });
+            if(response.status.code === 200) {
+                this.setState({
+                    article : response.json,
+                    status : "Saved"
+                });
+            } else {
+                this.setState({
+                    status : "Error"
+                });
+                console.log(response);
+            }
         });
     },
 
@@ -113,8 +120,11 @@ const Browser = React.createClass({
     },
 
     handleArticleChange(article) {
-        this.setState({ article });
         this.debouncedHandleSave();
+        this.setState({
+            article,
+            status : "Edited"
+        });
     },
 
     render() {
@@ -142,6 +152,7 @@ const Browser = React.createClass({
                     <div className={`button ${this.state.article && this.state.article.key.length > 0 ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
+                    <div className="menu__status">{this.state.status}</div>
                 </div>
                 <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article.id : null}/>
                 {this.state.editing ? <Editor article={this.state.article} onArticleChange={this.handleArticleChange}/> : <Previewer article={this.state.article} />}
