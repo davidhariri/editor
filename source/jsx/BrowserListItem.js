@@ -5,7 +5,7 @@ const BrowserListItem = React.createClass({
 
     renderDate() {
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const d = new Date(this.props.article.made);
+        const d = new Date(this.props.article.made.$date);
 
         return `${monthNames[d.getMonth()]} ${d.getDate()} ${d.getFullYear()}`;
     },

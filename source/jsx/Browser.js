@@ -16,7 +16,7 @@ const Browser = React.createClass({
     },
 
     handleSave() {
-        Net.put(`${APIURL}/articles/${this.state.article.id}`, this.state.article)
+        Net.put(`${APIURL}/articles/${this.state.article._id.$oid}`, this.state.article)
         .then((response) => {
             if(response.status.code === 200) {
                 const article = this.state.article;
@@ -83,14 +83,14 @@ const Browser = React.createClass({
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             Net
-            .delete(`${APIURL}/articles/${this.state.article.id}`)
+            .delete(`${APIURL}/articles/${this.state.article._id.$oid}`)
             .then((response) => {
                 // Remove the article from the articles body to reflect the change
                 let index = -1;
                 const articles = this.state.articles;
 
                 articles.map((article, i) => {
-                    if(this.state.article.id === article.id) {
+                    if(this.state.article._id.$oid === article._id.$oid) {
                         index = i;
                         return;
                     }
@@ -101,8 +101,8 @@ const Browser = React.createClass({
                 }
 
                 this.setState({
-                    article : null,
-                    articles
+                    articles,
+                    article : articles[0]
                 });
             });
         }
@@ -157,7 +157,7 @@ const Browser = React.createClass({
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
                     <div className="menu__status">{this.state.status}</div>
                 </div>
-                <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article.id : null}/>
+                <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id.$oid : null}/>
                 {this.state.editing ? <Editor article={this.state.article} onArticleChange={this.handleArticleChange}/> : <Previewer article={this.state.article} />}
             </div>
         );

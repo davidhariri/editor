@@ -1,6 +1,6 @@
 let user = sessionStorage.getItem("user");
 let password = sessionStorage.getItem("password");
-const APIURL = 'https://api.dhariri.com';
+const APIURL = 'http://localhost:8000';
 
 if(user && password) {
     authenticate();
