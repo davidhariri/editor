@@ -14,23 +14,10 @@
     font-size: 20px;
     font-family: "Menlo", "Monaco", monospace;
     line-height: 1.5em;
-
-    input, textarea {
-        max-width: 768px;
-        width: 100%;
-        display: inline-block;
-        margin: 0 auto;
-        resize: none;
-        background-color: transparent;
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
-    }
-
+    
     .editor__content, .editor__title {
         line-height: 1.5em;
-        resize: none;
-        overflow: hidden;
+        max-width: 768px;
     }
 
     .editor__content {

@@ -4,7 +4,8 @@ const Browser = React.createClass({
             articles : [],
             article : null,
             editing : true,
-            status : ""
+            status : "",
+            shouldFocus : false
         }
     },
 
@@ -111,6 +112,7 @@ const Browser = React.createClass({
     handlePublishClick() {
         const article = this.state.article;
         article.published = !article.published;
+
         this.setState({ article }, () => {
             this.handleSave();
         })
@@ -158,7 +160,7 @@ const Browser = React.createClass({
                     <div className="menu__status">{this.state.status}</div>
                 </div>
                 <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id.$oid : null}/>
-                {this.state.editing ? <Editor article={this.state.article} onArticleChange={this.handleArticleChange}/> : <Previewer article={this.state.article} />}
+                {this.state.editing ? <Editor article={this.state.article} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}
             </div>
         );
 

@@ -6,7 +6,8 @@ const Textarea = React.createClass({
 			key : Math.random().toString(36).substring(7),
 			className: '',
 			changeHandler : false,
-			value : ''
+			value : '',
+			content_id : ""
 		}
 	},
 
@@ -17,13 +18,14 @@ const Textarea = React.createClass({
 	},
 
 	componentDidMount() {
-		// Listen for
 		window.addEventListener('resize', this.resize);
 
 		this.setState({
 			height : this.props.minHeight
 		});
+	},
 
+	componentDidUpdate() {
 		this.resize();
 	},
 
@@ -31,28 +33,18 @@ const Textarea = React.createClass({
 		window.removeEventListener('resize', this.resize);
 	},
 
-	componentWillReceiveProps() {
-		this.resize();
-	},
-
 	handleChange(event) {
 		this.props.changeHandler(event.target.value);
 	},
 
 	resize() {
-		const text = ReactDOM.findDOMNode(this).firstChild;
+		const mirror = ReactDOM.findDOMNode(this).firstChild;
 
-		this.setState({
-			height : "auto"
-		}, () => {
+		if(mirror.offsetHeight != this.state.height) {
 			this.setState({
-				height : `${Math.max(text.scrollHeight, this.props.minHeight)}px`
+				height : Math.max(mirror.offsetHeight, this.props.minHeight)
 			});
-		});
-	},
-
-	delayedResize() {
-		window.setTimeout(this.resize(), 0);
+		}
 	},
 
 	render() {
@@ -61,12 +53,10 @@ const Textarea = React.createClass({
 				className={`textarea ${this.props.className}`}
 				style={{fontSize : this.props.fontSize}}
 			>
+				<pre className="textarea__mirror"><span>{this.props.value}</span><br/></pre>
 				<textarea
 					onChange={this.handleChange}
-					onPaste={this.delayedResize}
-					onCut={this.delayedResize}
-					onDrop={this.delayedResize}
-					style={{height:this.state.height}}
+					style={{height:`${this.state.height}px`}}
 					value={this.props.value}
 					placeholder={this.props.placeholder}
 				/>

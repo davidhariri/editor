@@ -24,6 +24,7 @@ const Editor = React.createClass({
                         className={"editor__title"}
                         placeholder={"Article title"}
                         changeHandler={this.handleChangeTitle}
+                        content_id={this.props.article._id.$oid}
                         value={this.props.article ? this.props.article.title : ''}
                     />
                     <Textarea
@@ -31,6 +32,7 @@ const Editor = React.createClass({
                         className={"editor__content"}
                         placeholder={"Some markdown content"}
                         changeHandler={this.handleChangeContent}
+                        content_id={this.props.article._id.$oid}
                         value={this.props.article ? this.props.article.content.markdown : ''}
                     />
                 </div>
