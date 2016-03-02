@@ -41,8 +41,11 @@ const Textarea = React.createClass({
 		const mirror = ReactDOM.findDOMNode(this).firstChild;
 
 		if(mirror.offsetHeight != this.state.height) {
+			const newHeight = Math.max(mirror.offsetHeight, this.props.minHeight);
 			this.setState({
-				height : Math.max(mirror.offsetHeight, this.props.minHeight)
+				height : newHeight
+			}, () => {
+				console.log(`Resized to ${newHeight}`);
 			});
 		}
 	},
