@@ -67,20 +67,6 @@ const Browser = React.createClass({
         });
     },
 
-    handleEditKeyClick() {
-        const keyPrompt = prompt("Speciy a url-safe key for this article.", this.state.article.key);
-
-        if (keyPrompt != null || keyPrompt != "") {
-            let article = this.state.article;
-            article.key = keyPrompt;
-            this.setState({
-                article
-            }, () => {
-                this.handleSave();
-            });
-        }
-    },
-
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             Net
@@ -134,15 +120,10 @@ const Browser = React.createClass({
 
     render() {
         let publishLabel = "Publish";
-        let keyLabel = "Add Key";
         let previewLabel = "Preview";
 
         if(this.state.article && this.state.article.published) {
             publishLabel = "Unpublish";
-        }
-
-        if(this.state.article && this.state.article.key) {
-            keyLabel = "Edit Key";
         }
 
         if(!this.state.editing) {
@@ -153,8 +134,7 @@ const Browser = React.createClass({
             <div className="browser">
                 <div className="menu browser__menu">
                     <div className="button" onClick={this.handleNewClick}>New</div>
-                    <div className={`button ${this.state.article && this.state.article.published ? 'button--disabled' : ''}`} onClick={this.handleEditKeyClick}>{keyLabel}</div>
-                    <div className={`button ${this.state.article && this.state.article.key.length > 0 ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
+                    <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
                     <div className="menu__status">{this.state.status}</div>
