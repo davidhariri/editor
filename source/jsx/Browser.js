@@ -122,7 +122,7 @@ const Browser = React.createClass({
     },
 
     openArticle() {
-        window.open(`https://dhariri.com/${this.state.article._id.$oid}`);
+        window.open(`https://dhariri.com/posts/${this.state.article._id.$oid}`);
     },
 
     handlePreviewClick() {
