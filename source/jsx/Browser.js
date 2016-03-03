@@ -95,13 +95,34 @@ const Browser = React.createClass({
         }
     },
 
+    handleShareClick() {
+        const article = this.state.article;
+        article.shared = !article.shared;
+
+        this.setState({ article }, () => {
+            this.handleSave();
+
+            if(article.shared) {
+                this.openArticle();
+            }
+        })
+    },
+
     handlePublishClick() {
         const article = this.state.article;
         article.published = !article.published;
 
         this.setState({ article }, () => {
             this.handleSave();
+
+            if(article.published) {
+                this.openArticle();
+            }
         })
+    },
+
+    openArticle() {
+        window.open(`https://dhariri.com/${this.state.article._id.$oid}`);
     },
 
     handlePreviewClick() {
@@ -120,10 +141,15 @@ const Browser = React.createClass({
 
     render() {
         let publishLabel = "Publish";
+        let shareLabel = "Share";
         let previewLabel = "Preview";
 
         if(this.state.article && this.state.article.published) {
             publishLabel = "Unpublish";
+        }
+
+        if(this.state.article && this.state.article.shared) {
+            shareLabel = "Unshare";
         }
 
         if(!this.state.editing) {
@@ -134,6 +160,7 @@ const Browser = React.createClass({
             <div className="browser">
                 <div className="menu browser__menu">
                     <div className="button" onClick={this.handleNewClick}>New</div>
+                    <div className={`button ${this.state.article && !this.state.article.published ? '' : 'button--disabled'}`} onClick={this.handleShareClick}>{shareLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
