@@ -5,7 +5,9 @@ const Browser = React.createClass({
             article : null,
             editing : true,
             status : "",
-            shouldFocus : false
+            shouldFocus : false,
+            caretPosition: null,
+            textarea : null
         }
     },
 
@@ -121,6 +123,36 @@ const Browser = React.createClass({
         })
     },
 
+    handleUploadChange(event) {
+        const reader = new FileReader();
+        const file = event.target.files[0];
+
+        reader.onload = (upload) => {
+            Net
+            .post(`${APIURL}/images/`, {
+                name : file.name,
+                stream : upload.target.result
+            })
+            .then((response) => {
+                const article = this.state.article;
+                const mdImage = `![](${response.json.url})`;
+                const oldContent = article.content.markdown;
+
+                article.content.markdown = [oldContent.slice(0, this.state.caretPosition), mdImage, oldContent.slice(this.state.caretPosition)].join('');
+                this.setState({ article }, () => {
+                    this.handleSave();
+
+                    if(this.state.textarea != null) {
+                        this.state.textarea.focus();
+                        this.state.textarea.setSelectionRange(textarea.selectionStart+3, textarea.selectionStart+3);
+                    }
+                });
+            });
+        }
+
+        reader.readAsDataURL(file);
+    },
+
     openArticle() {
         window.open(`https://dhariri.com/posts/${this.state.article._id.$oid}`);
     },
@@ -136,6 +168,13 @@ const Browser = React.createClass({
         this.setState({
             article,
             status : "Edited"
+        });
+    },
+
+    handleCaretUpdate(textarea) {
+        this.setState({
+            caretPosition: textarea.selectionStart,
+            textarea
         });
     },
 
@@ -164,10 +203,14 @@ const Browser = React.createClass({
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
+                    <div className={`button ${this.state.article && this.state.editing && this.state.caretPosition !== null ? '' : 'button--disabled'}`}>
+                        <span>Upload</span>
+                        <input type="file" name="file" id="file" onChange={this.handleUploadChange} accept="image/*"/>
+                    </div>
                     <div className="menu__status">{this.state.status}</div>
                 </div>
                 <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id.$oid : null}/>
-                {this.state.editing ? <Editor article={this.state.article} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}
+                {this.state.editing ? <Editor article={this.state.article} onCaretUpdate={this.handleCaretUpdate} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}
             </div>
         );
 

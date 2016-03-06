@@ -32,6 +32,7 @@ const Editor = React.createClass({
                         className={"editor__content"}
                         placeholder={"Some markdown content"}
                         changeHandler={this.handleChangeContent}
+                        caretChangeHandler={this.props.onCaretUpdate}
                         content_id={this.props.article._id.$oid}
                         value={this.props.article ? this.props.article.content.markdown : ''}
                     />

@@ -35,6 +35,10 @@ const Textarea = React.createClass({
 
 	handleChange(event) {
 		this.props.changeHandler(event.target.value);
+		
+		if(this.props.caretChangeHandler) {
+			this.props.caretChangeHandler(event.target);
+		}
 	},
 
 	resize() {
@@ -57,6 +61,7 @@ const Textarea = React.createClass({
 				<pre className="textarea__mirror"><span>{this.props.value}</span><br/></pre>
 				<textarea
 					onChange={this.handleChange}
+					onClick={this.handleChange}
 					style={{height:`${this.state.height}px`}}
 					value={this.props.value}
 					placeholder={this.props.placeholder}
