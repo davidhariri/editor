@@ -134,7 +134,7 @@ const Browser = React.createClass({
             const authChain = window.btoa(`${sessionStorage.getItem("user")}:${sessionStorage.getItem("password")}`);
 
             formData.append('file', file);
-            uploadRequest.open('POST', 'http://localhost:8000/images/');
+            uploadRequest.open('POST', `${APIURL}/images/`);
             uploadRequest.setRequestHeader('Authorization', `Basic ${authChain}`);
             uploadRequest.onload = () => {
                 if(uploadRequest.status === 201) {
