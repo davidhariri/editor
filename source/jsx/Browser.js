@@ -5,7 +5,6 @@ const Browser = React.createClass({
             article : null,
             editing : true,
             status : "",
-            shouldFocus : false,
             caretPosition: null,
             textarea : null
         }
@@ -126,28 +125,40 @@ const Browser = React.createClass({
     handleUploadChange(event) {
         const reader = new FileReader();
         const file = event.target.files[0];
+        const rootComponent = this;
+        const articleState = rootComponent.state;
 
         reader.onload = (upload) => {
-            Net
-            .post(`${APIURL}/images/`, {
-                name : file.name,
-                stream : upload.target.result
-            })
-            .then((response) => {
-                const article = this.state.article;
-                const mdImage = `![](${response.json.url})`;
-                const oldContent = article.content.markdown;
+            const formData = new FormData();
+            const uploadRequest = new XMLHttpRequest();
+            const authChain = window.btoa(`${sessionStorage.getItem("user")}:${sessionStorage.getItem("password")}`);
 
-                article.content.markdown = [oldContent.slice(0, this.state.caretPosition), mdImage, oldContent.slice(this.state.caretPosition)].join('');
-                this.setState({ article }, () => {
-                    this.handleSave();
+            formData.append('file', file);
+            uploadRequest.open('POST', 'http://localhost:8000/images/');
+            uploadRequest.setRequestHeader('Authorization', `Basic ${authChain}`);
+            uploadRequest.onload = () => {
+                if(uploadRequest.status === 201) {
+                    const article = articleState.article;
+                    const jsonResponse = JSON.parse(uploadRequest.responseText);
+                    const mdImage = `![](${jsonResponse.url})`;
+                    const oldContent = article.content.markdown;
 
-                    if(this.state.textarea != null) {
-                        this.state.textarea.focus();
-                        this.state.textarea.setSelectionRange(textarea.selectionStart+3, textarea.selectionStart+3);
-                    }
-                });
-            });
+                    article.content.markdown = [oldContent.slice(0, articleState.caretPosition), mdImage, oldContent.slice(articleState.caretPosition)].join('');
+
+                    rootComponent.setState({ article }, () => {
+                        rootComponent.handleSave();
+
+                        if(articleState.textarea != null) {
+                            articleState.textarea.focus();
+                            articleState.textarea.setSelectionRange(articleState.textarea.selectionStart+2, articleState.textarea.selectionStart+2);
+                        }
+                    });
+                } else {
+                    console.warn(uploadRequest);
+                }
+            };
+
+            uploadRequest.send(formData);
         }
 
         reader.readAsDataURL(file);
