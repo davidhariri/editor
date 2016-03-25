@@ -213,9 +213,10 @@ const Browser = React.createClass({
                     <div className={`button ${this.state.article && !this.state.article.published ? '' : 'button--disabled'}`} onClick={this.handleShareClick}>{shareLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
+                    <div className={`button ${this.state.article && (this.state.article.published || this.state.article.shared) ? '' : 'button--disabled'}`} onClick={this.openArticle}>Open</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
                     <div className={`button ${this.state.article && this.state.editing && this.state.caretPosition !== null ? '' : 'button--disabled'}`}>
-                        <span>Upload</span>
+                        <span>Insert Image</span>
                         <input type="file" name="file" id="file" onChange={this.handleUploadChange} accept="image/*"/>
                     </div>
                     <div className="menu__status">{this.state.status}</div>
