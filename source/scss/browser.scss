@@ -32,6 +32,7 @@
             padding: 12px;
             line-height: 22px;
             position: relative;
+            padding-right: 20px;
 
             &--selected {
                 background-color: $light-grey;
@@ -48,17 +49,12 @@
             }
 
             &__status {
+                color: $dark-grey;
                 position: absolute;
                 right: 12px;
                 top: 12px;
-                background-color: #ffcc33;
-                width: 12px;
-                height: 12px;
-                border-radius: 100%;
-
-                &--published {
-                    background-color: #4bda7b;
-                }
+                width: auto;
+                font-size: 1em;
             }
         }
     }
