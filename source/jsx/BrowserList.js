@@ -14,7 +14,7 @@ const BrowserList = React.createClass({
                         key={i}
                         clickHandler={this.props.clickHandler}
                         article={article}
-                        selected={article._id.$oid === this.props.selected}
+                        selected={article._id === this.props.selected}
                     />);
                 })}
             </div>

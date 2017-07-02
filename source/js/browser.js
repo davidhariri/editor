@@ -1,6 +1,6 @@
 let user = sessionStorage.getItem("user");
 let password = sessionStorage.getItem("password");
-const APIURL = 'https://api.dhariri.com';
+const API = new Net('https://dhariri-api.herokuapp.com');
 
 if(user && password) {
     authenticate();
@@ -53,17 +53,14 @@ var debounce = function(func, wait, immediate) {
 };
 
 function authenticate(callback) {
-    user = sessionStorage.getItem("user");
-    password = sessionStorage.getItem("password");
-    const chain = window.btoa(`${user}:${password}`);
+    const password = localStorage.getItem('password');
 
-    Net.setup({
-        headers : {
-            'Authorization' : `Basic ${chain}`
-        }
+    API.setHeaders({
+        'Authorization' : password,
+        'Content-Type' : 'application/json; charset=utf-8'
     });
 
-    Net.get(APIURL)
+    API.get('/auth/')
     .then((response) => {
         if(response.status.code === 200) {
             ReactDOM.render(<Browser/>, document.getElementById("app"));

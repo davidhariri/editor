@@ -2,6 +2,7 @@ const Browser = React.createClass({
     getInitialState() {
         return {
             articles : [],
+            page: 1,
             article : null,
             editing : true,
             status : "",
@@ -18,14 +19,15 @@ const Browser = React.createClass({
     },
 
     handleSave() {
-        Net.put(`${APIURL}/articles/${this.state.article._id.$oid}`, this.state.article)
-        .then((response) => {
+        API.patch(`/articles/${this.state.article._id}/`, {
+            content: this.state.article.content,
+            title: this.state.article.title,
+            shared: this.state.article.shared,
+            published: this.state.article.published
+        }).then((response) => {
             if(response.status.code === 200) {
-                const article = this.state.article;
-                article.content.html = response.json.content.html;
-
                 this.setState({
-                    article,
+                    article: response.json,
                     status : "Saved"
                 });
             } else {
@@ -38,11 +40,10 @@ const Browser = React.createClass({
     },
 
     componentDidMount() {
-        Net
-        .get(`${APIURL}/articles/`)
+        API.get(`/articles/?page=${this.state.page}&size=20&order=-created`)
         .then((response) => {
             this.setState({
-                articles : response.json
+                articles : response.json.articles
             }, () => {
                 this.handleArticleSelect(this.state.articles[0]);
             })
@@ -56,9 +57,10 @@ const Browser = React.createClass({
     },
 
     handleNewClick() {
-        Net
-        .post(`${APIURL}/articles/`)
-        .then((response) => {
+        API.post(`/articles/`, {
+            'title': '',
+            'content': ''
+        }).then((response) => {
             const articles = this.state.articles;
             articles.unshift(response.json);
             this.setState({
@@ -70,15 +72,15 @@ const Browser = React.createClass({
 
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
-            Net
-            .delete(`${APIURL}/articles/${this.state.article._id.$oid}`)
+            API
+            .delete(`/articles/${this.state.article._id}`)
             .then((response) => {
                 // Remove the article from the articles body to reflect the change
                 let index = -1;
                 const articles = this.state.articles;
 
                 articles.map((article, i) => {
-                    if(this.state.article._id.$oid === article._id.$oid) {
+                    if(this.state.article._id === article._id) {
                         index = i;
                         return;
                     }
@@ -134,16 +136,16 @@ const Browser = React.createClass({
             const authChain = window.btoa(`${sessionStorage.getItem("user")}:${sessionStorage.getItem("password")}`);
 
             formData.append('file', file);
-            uploadRequest.open('POST', `${APIURL}/images/`);
+            uploadRequest.open('POST', `/images/`);
             uploadRequest.setRequestHeader('Authorization', `Basic ${authChain}`);
             uploadRequest.onload = () => {
                 if(uploadRequest.status === 201) {
                     const article = articleState.article;
                     const jsonResponse = JSON.parse(uploadRequest.responseText);
                     const mdImage = `![](${jsonResponse.url})`;
-                    const oldContent = article.content.markdown;
+                    const oldContent = article.content;
 
-                    article.content.markdown = [oldContent.slice(0, articleState.caretPosition), mdImage, oldContent.slice(articleState.caretPosition)].join('');
+                    article.content = [oldContent.slice(0, articleState.caretPosition), mdImage, oldContent.slice(articleState.caretPosition)].join('');
 
                     rootComponent.setState({ article }, () => {
                         rootComponent.handleSave();
@@ -165,7 +167,7 @@ const Browser = React.createClass({
     },
 
     openArticle() {
-        window.open(`https://dhariri.com/posts/${this.state.article._id.$oid}`);
+        window.open(`https://dhariri.com/posts/${this.state.article._id}`);
     },
 
     handlePreviewClick() {
@@ -221,7 +223,7 @@ const Browser = React.createClass({
                     </div>
                     <div className="menu__status">{this.state.status}</div>
                 </div>
-                <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id.$oid : null}/>
+                <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id : null}/>
                 {this.state.editing ? <Editor article={this.state.article} onCaretUpdate={this.handleCaretUpdate} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}
             </div>
         );

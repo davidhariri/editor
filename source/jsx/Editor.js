@@ -11,7 +11,7 @@ const Editor = React.createClass({
     },
 
     handleChangeContent(value) {
-        this.props.article.content.markdown = value;
+        this.props.article.content = value;
         this.props.onArticleChange(this.props.article);
     },
 
@@ -24,7 +24,7 @@ const Editor = React.createClass({
                         className={"editor__title"}
                         placeholder={"Article title"}
                         changeHandler={this.handleChangeTitle}
-                        content_id={this.props.article._id.$oid}
+                        content_id={this.props.article._id}
                         value={this.props.article ? this.props.article.title : ''}
                     />
                     <Textarea
@@ -33,8 +33,8 @@ const Editor = React.createClass({
                         placeholder={"Some markdown content"}
                         changeHandler={this.handleChangeContent}
                         caretChangeHandler={this.props.onCaretUpdate}
-                        content_id={this.props.article._id.$oid}
-                        value={this.props.article ? this.props.article.content.markdown : ''}
+                        content_id={this.props.article._id}
+                        value={this.props.article ? this.props.article.content : ''}
                     />
                 </div>
             );

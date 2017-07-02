@@ -20,7 +20,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-sass": "^2.2.0",
     "gulp-watch": "^4.3.5",
-    "net.js": "^0.1.0",
+    "net.js": "^4.0.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7"
   }

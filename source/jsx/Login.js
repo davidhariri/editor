@@ -1,15 +1,20 @@
 const Login = React.createClass({
     getInitialState() {
         return {
-            user : "",
-            password : ""
+            password : ''
         }
     },
 
-    handleEmailChange(event) {
-        this.setState({
-            user : event.target.value
-        });
+    componentDidMount() {
+        const savedPassword = localStorage.getItem('password') || '';
+        
+        if (savedPassword !== '') {
+            this.setState({
+                password: savedPassword
+            }, () => {
+                authenticate();
+            })
+        }
     },
 
     handlePasswordChange(event) {
@@ -19,18 +24,16 @@ const Login = React.createClass({
     },
 
     handleLogin() {
-        sessionStorage.setItem('user', this.state.user);
-        sessionStorage.setItem('password', this.state.password);
+        localStorage.setItem('password', this.state.password);
         authenticate();
-        this.setState(this.getInitialState());
+        // this.setState(this.getInitialState());
     },
 
     render() {
         const template = (
             <div className="login">
                 <div className="login__input-container">
-                    <input className="login__input-container__input" type="email" onChange={this.handleEmailChange} value={this.state.user} placeholder="User"/>
-                    <input className="login__input-container__input" type="password" onChange={this.handlePasswordChange} value={this.state.password} placeholder="Password"/>
+                    <input autoFocus="true" spellCheck="false" className="login__input-container__input" type="password" onChange={this.handlePasswordChange} value={this.state.password} placeholder="Token"/>
                 </div>
                 <div className="login__button button" onClick={this.handleLogin}>Sign In</div>
             </div>

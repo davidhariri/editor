@@ -17,7 +17,7 @@ const Previewer = React.createClass({
         if(this.props.article) {
             const template = (
                 <div className="editor">
-                    <article dangerouslySetInnerHTML={this.renderHTML(this.props.article.content.html)} />
+                    <article dangerouslySetInnerHTML={this.renderHTML(this.props.article.html_content)} />
                 </div>
             );
 
