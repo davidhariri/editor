@@ -11,17 +11,18 @@ const Browser = React.createClass({
         }
     },
 
-    handleSave() {
-        API.patch(`/articles/${this.state.article._id}/`, {
-            content: this.state.article.content,
-            title: this.state.article.title,
-            shared: this.state.article.shared,
-            published: this.state.article.published
-        }).then((response) => {
+    handleSave(fields, callback) {
+        API.patch(
+            `/articles/${this.state.article._id}/`,
+            fields
+        ).then((response) => {
             if(response.status.code === 200) {
                 this.setState({
-                    article: response.json,
                     status: "Saved"
+                }, () => {
+                    if (callback) {
+                        callback(response.json);
+                    }
                 });
             } else {
                 this.setState({
@@ -92,28 +93,14 @@ const Browser = React.createClass({
     },
 
     handleShareClick() {
-        const article = this.state.article;
-        article.shared = !article.shared;
-
-        this.setState({ article }, () => {
-            this.handleSave();
-
-            if(article.shared) {
-                this.openArticle();
-            }
+        this.handleSave({
+            shared: !this.state.article.shared
         })
     },
 
     handlePublishClick() {
-        const article = this.state.article;
-        article.published = !article.published;
-
-        this.setState({ article }, () => {
-            this.handleSave();
-
-            if(article.published) {
-                this.openArticle();
-            }
+        this.handleSave({
+            published: !this.state.article.published
         })
     },
 
@@ -158,8 +145,8 @@ const Browser = React.createClass({
         reader.readAsDataURL(file);
     },
 
-    openArticle() {
-        window.open(`https://dhariri.com/posts/${this.state.article._id}`);
+    openArticle(i) {
+        window.open(`https://dhariri.com/posts/${i}`);
     },
 
     handlePreviewClick() {
@@ -206,13 +193,32 @@ const Browser = React.createClass({
                     <div className={`button ${this.state.article && !this.state.article.published ? '' : 'button--disabled'}`} onClick={this.handleShareClick}>{shareLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePublishClick}>{publishLabel}</div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handlePreviewClick}>{previewLabel}</div>
-                    <div className={`button ${this.state.article && (this.state.article.published || this.state.article.shared) ? '' : 'button--disabled'}`} onClick={this.openArticle}>Open</div>
+                    <div
+                    className={`button ${this.state.article && (this.state.article.published || this.state.article.shared) ? '' : 'button--disabled'}`}
+                    onClick={() => {
+                        this.openArticle(this.state.article.published ? this.state.article.slug : this.state.article.share_slug);
+                    }}>
+                        Open
+                    </div>
                     <div className={`button ${this.state.article ? '' : 'button--disabled'}`} onClick={this.handleDeleteClick}>Delete</div>
                     <div className={`button ${this.state.article && this.state.editing && this.state.caretPosition !== null ? '' : 'button--disabled'}`}>
                         <span>Insert Image</span>
                         <input type="file" name="file" id="file" onChange={this.handleUploadChange} accept="image/*"/>
                     </div>
-                    <div className={`button button--right ${this.state.article && this.state.status === 'Edited' ? '' : 'button--disabled'}`} onClick={this.handleSave}>Save</div>
+                    <div
+                    className={`button button--right ${this.state.article && this.state.status === 'Edited' ? '' : 'button--disabled'}`}
+                    onClick={() => {
+                        this.handleSave({
+                            content: this.state.article.content
+                        }, (r) => {
+                            let article = this.state.article;
+                            article.html_content = r.html_content;
+                            this.setState({ article });
+                        })
+                    }}>
+                        Save
+                    </div>
+                    <div className="menu__status">{this.state.status}</div>
                 </div>
                 <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id : null}/>
                 {this.state.editing ? <Editor article={this.state.article} onCaretUpdate={this.handleCaretUpdate} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}
