@@ -11,13 +11,6 @@ const Browser = React.createClass({
         }
     },
 
-    componentWillMount() {
-        // Set the debounce save method
-        this.debouncedHandleSave = debounce(() => {
-            this.handleSave();
-        }, 500, false);
-    },
-
     handleSave() {
         API.patch(`/articles/${this.state.article._id}/`, {
             content: this.state.article.content,
@@ -28,7 +21,7 @@ const Browser = React.createClass({
             if(response.status.code === 200) {
                 this.setState({
                     article: response.json,
-                    status : "Saved"
+                    status: "Saved"
                 });
             } else {
                 this.setState({
@@ -73,7 +66,7 @@ const Browser = React.createClass({
     handleDeleteClick() {
         if(confirm("Are you sure you want to delete this article?")) {
             API
-            .delete(`/articles/${this.state.article._id}`)
+            .delete(`/articles/${this.state.article._id}/`)
             .then((response) => {
                 // Remove the article from the articles body to reflect the change
                 let index = -1;
@@ -133,13 +126,12 @@ const Browser = React.createClass({
         reader.onload = (upload) => {
             const formData = new FormData();
             const uploadRequest = new XMLHttpRequest();
-            const authChain = window.btoa(`${sessionStorage.getItem("user")}:${sessionStorage.getItem("password")}`);
 
             formData.append('file', file);
-            uploadRequest.open('POST', `/images/`);
-            uploadRequest.setRequestHeader('Authorization', `Basic ${authChain}`);
+            uploadRequest.open('POST', `${APIURL}/images/`);
+            uploadRequest.setRequestHeader('Authorization', `${localStorage.getItem("password")}`);
             uploadRequest.onload = () => {
-                if(uploadRequest.status === 201) {
+                if(uploadRequest.status === 200) {
                     const article = articleState.article;
                     const jsonResponse = JSON.parse(uploadRequest.responseText);
                     const mdImage = `![](${jsonResponse.url})`;
@@ -177,7 +169,6 @@ const Browser = React.createClass({
     },
 
     handleArticleChange(article) {
-        this.debouncedHandleSave();
         this.setState({
             article,
             status : "Edited"
@@ -221,7 +212,7 @@ const Browser = React.createClass({
                         <span>Insert Image</span>
                         <input type="file" name="file" id="file" onChange={this.handleUploadChange} accept="image/*"/>
                     </div>
-                    <div className="menu__status">{this.state.status}</div>
+                    <div className={`button button--right ${this.state.article && this.state.status === 'Edited' ? '' : 'button--disabled'}`} onClick={this.handleSave}>Save</div>
                 </div>
                 <BrowserList clickHandler={this.handleArticleSelect} articles={this.state.articles} selected={this.state.article ? this.state.article._id : null}/>
                 {this.state.editing ? <Editor article={this.state.article} onCaretUpdate={this.handleCaretUpdate} onArticleChange={this.handleArticleChange} /> : <Previewer article={this.state.article} />}

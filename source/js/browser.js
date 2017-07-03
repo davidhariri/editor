@@ -1,6 +1,7 @@
 let user = sessionStorage.getItem("user");
 let password = sessionStorage.getItem("password");
-const API = new Net('https://dhariri-api.herokuapp.com');
+const APIURL = 'https://dhariri-api.herokuapp.com'
+const API = new Net(APIURL);
 
 if(user && password) {
     authenticate();
